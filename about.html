@@ -126,18 +126,24 @@
             <ul>
                 <li>
                     <strong>Sunday Worship Service</strong><br />
-                    Every Sunday • 9:00 AM
+                    Every Sunday • 9:00 AM (Edit your exact time here)
                 </li>
                 <li>
                     <strong>Prayer Meeting / Bible Study</strong><br />
-                    Midweek Gathering • Every Thursday &amp; 7:00
+                    Midweek Gathering • Edit day &amp; time here
                 </li>
             </ul>
         </section>
 
         <section>
-            <a class="btn-link" href="index.html">← Back to Home</a>
+            <a class="btn-link" id="backHomeBtn" href="index.html">← Back to Home</a>
         </section>
     </div>
+
+    <script>
+        document.getElementById("backHomeBtn").addEventListener("click", function () {
+            sessionStorage.setItem("gcfmm_skip_loader", "1");
+        });
+    </script>
 </body>
 </html>
