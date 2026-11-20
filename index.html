@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GCFMM WEBSITE</title>
 
-    <!-- CSS goes right here inside <style> -->
     <style>
         * {
             box-sizing: border-box;
@@ -14,30 +13,107 @@
         body {
             text-align: center;
             font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom, #a0c4ff, #caf0f8);
+            background: linear-gradient(135deg, #90e0ef, #a0c4ff, #caf0f8);
+            background-size: 200% 200%;
+            animation: bgShift 10s ease infinite;
             min-height: 100vh;
             color: #333;
             margin: 0;
             padding: 32px 16px;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
+        /* --- OPENING SPLASH SCREEN OVERLAY --- */
+        .splash-screen {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #034078, #0077b6);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+            animation: splashFadeOut 0.8s ease forwards;
+            animation-delay: 2.2s; /* Stays visible for 2.2 seconds before fading out */
+        }
+
+        .splash-cross {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: popIn 0.7s ease forwards;
+        }
+
+        .splash-title {
+            font-size: 1.9rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin: 0;
+            opacity: 0;
+            animation: slideUpText 0.8s ease 0.3s forwards;
+        }
+
+        .splash-sub {
+            font-size: 1rem;
+            color: #caf0f8;
+            margin-top: 6px;
+            opacity: 0;
+            animation: slideUpText 0.8s ease 0.6s forwards;
+        }
+
+        .splash-loader {
+            width: 140px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 4px;
+            margin-top: 22px;
+            overflow: hidden;
+        }
+
+        .splash-loader-bar {
+            height: 100%;
+            width: 0%;
+            background: #90e0ef;
+            border-radius: 4px;
+            animation: loadProgress 2s ease-in-out forwards;
+        }
+
+        /* --- MAIN PAGE CONTAINER & CARD ANIMATIONS --- */
         .container {
             max-width: 720px;
             margin: 0 auto;
         }
 
         section {
-            background: rgba(255, 255, 255, 0.88);
-            border-radius: 12px;
-            padding: 20px 24px;
-            margin: 18px auto;
-            box-shadow: 0 6px 16px rgba(3, 64, 120, 0.12);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(6px);
+            border-radius: 14px;
+            padding: 22px 26px;
+            margin: 20px auto;
+            box-shadow: 0 8px 20px rgba(3, 64, 120, 0.14);
+            opacity: 0;
+            transform: translateY(25px);
+            animation: cardReveal 0.7s ease forwards;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        /* Staggered reveal after splash screen finishes */
+        section:nth-child(1) { animation-delay: 2.4s; }
+        section:nth-child(2) { animation-delay: 2.6s; }
+        section:nth-child(3) { animation-delay: 2.8s; }
+        section:nth-child(4) { animation-delay: 3.0s; }
+
+        section:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 26px rgba(3, 64, 120, 0.2);
         }
 
         h1 {
             color: #034078;
-            margin-bottom: 6px;
+            margin: 0 0 8px;
             font-size: 2rem;
         }
 
@@ -45,7 +121,10 @@
             color: #034078;
             margin-top: 0;
             margin-bottom: 10px;
-            font-size: 1.3rem;
+            font-size: 1.35rem;
+            display: inline-block;
+            border-bottom: 2px solid #90e0ef;
+            padding-bottom: 4px;
         }
 
         p {
@@ -64,39 +143,88 @@
 
         a.btn-link {
             display: inline-block;
-            background-color: #034078;
+            background: linear-gradient(135deg, #034078, #1d4ed8);
             color: #ffffff;
             font-weight: bold;
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 12px 24px;
+            border-radius: 50px;
             text-decoration: none;
-            transition: background-color 0.2s ease, transform 0.15s ease;
+            box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         a.btn-link:hover {
-            background-color: #1d4ed8;
-            transform: translateY(-1px);
-        }
-
-        img {
-            margin-top: 15px;
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
+            box-shadow: 0 6px 18px rgba(29, 78, 216, 0.45);
         }
 
         iframe {
             margin-top: 12px;
             border: 2px solid #034078;
-            border-radius: 8px;
+            border-radius: 10px;
             width: 100%;
             max-width: 600px;
             height: 360px;
         }
+
+        /* --- KEYFRAME ANIMATIONS --- */
+        @keyframes bgShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes slideUpText {
+            0% { opacity: 0; transform: translateY(15px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes loadProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        @keyframes splashFadeOut {
+            0% {
+                opacity: 1;
+                visibility: visible;
+            }
+            100% {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+            }
+        }
+
+        @keyframes cardReveal {
+            0% {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Opening Intro Screen -->
+    <div class="splash-screen">
+        <div class="splash-cross">✝</div>
+        <p class="splash-title">Gospel of Christ Fellowship</p>
+        <p class="splash-sub">Maticmatic, Sta. Barbara, Pangasinan</p>
+        <div class="splash-loader">
+            <div class="splash-loader-bar"></div>
+        </div>
+    </div>
+
+    <!-- Main Website Content -->
     <div class="container">
         <section>
             <h1>Welcome to GCFMM WEBSITE</h1>
@@ -113,7 +241,7 @@
             <ul>
                 <li>
                     <a class="btn-link" href="https://www.facebook.com/gcfmm2023" target="_blank" rel="noopener noreferrer">
-                        Facebook Page
+                        Visit Our Facebook Page
                     </a>
                 </li>
             </ul>
