@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Us - GCFMM WEBSITE</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #90e0ef, #a0c4ff, #caf0f8);
+            background-size: 200% 200%;
+            animation: bgShift 10s ease infinite;
+            min-height: 100vh;
+            color: #333;
+            margin: 0;
+            padding: 32px 16px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        section {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(6px);
+            border-radius: 14px;
+            padding: 22px 26px;
+            margin: 20px auto;
+            box-shadow: 0 8px 20px rgba(3, 64, 120, 0.14);
+            animation: cardReveal 0.6s ease forwards;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        section:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 26px rgba(3, 64, 120, 0.2);
+        }
+
+        h1 {
+            color: #034078;
+            margin: 0 0 8px;
+            font-size: 2rem;
+        }
+
+        h2 {
+            color: #034078;
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-size: 1.35rem;
+            display: inline-block;
+            border-bottom: 2px solid #90e0ef;
+            padding-bottom: 4px;
+        }
+
+        p {
+            margin: 6px 0 12px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 10px 0 0;
+        }
+
+        ul li {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin: 10px 0;
+        }
+
+        a.btn-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #034078, #1d4ed8);
+            color: #ffffff;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        a.btn-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 18px rgba(29, 78, 216, 0.45);
+        }
+
+        @keyframes bgShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes cardReveal {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <section>
+            <h1>About Us</h1>
+            <p><strong>Gospel of Christ Fellowship Maticmatic</strong></p>
+            <p>We are a welcoming community of believers in Maticmatic, Sta. Barbara, Pangasinan, dedicated to worship, fellowship, and sharing the Gospel of Christ.</p>
+        </section>
+
+        <section>
+            <h2>Sunday Services &amp; Gatherings</h2>
+            <ul>
+                <li>
+                    <strong>Sunday Worship Service</strong><br />
+                    Every Sunday • 9:00 AM (Edit your exact time here)
+                </li>
+                <li>
+                    <strong>Prayer Meeting / Bible Study</strong><br />
+                    Midweek Gathering • Edit day &amp; time here
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <a class="btn-link" href="index.html">← Back to Home</a>
+        </section>
+    </div>
+</body>
+</html>
