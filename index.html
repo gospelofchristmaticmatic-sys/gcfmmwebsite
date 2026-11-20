@@ -13,14 +13,18 @@
         body {
             text-align: center;
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #90e0ef, #a0c4ff, #caf0f8);
-            background-size: 200% 200%;
-            animation: bgShift 10s ease infinite;
+            background:
+                radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.55), transparent 35%),
+                radial-gradient(circle at 85% 25%, rgba(0, 119, 182, 0.18), transparent 40%),
+                radial-gradient(circle at 50% 90%, rgba(29, 78, 216, 0.14), transparent 45%),
+                linear-gradient(135deg, #72efdd 0%, #90e0ef 35%, #a0c4ff 70%, #caf0f8 100%);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 220% 220%;
+            animation: bgShift 12s ease infinite;
             min-height: 100vh;
-            color: #333;
+            color: #1e293b;
             margin: 0;
-            padding: 32px 16px;
-            line-height: 1.6;
+            padding: 36px 16px;
+            line-height: 1.65;
             overflow-x: hidden;
         }
 
@@ -47,7 +51,9 @@
         .loader-screen {
             position: fixed;
             inset: 0;
-            background: linear-gradient(135deg, #034078, #0077b6);
+            background:
+                radial-gradient(circle at 50% 35%, rgba(144, 224, 239, 0.22), transparent 55%),
+                linear-gradient(135deg, #022b52, #034078 55%, #0077b6);
             color: #ffffff;
             display: flex;
             flex-direction: column;
@@ -112,7 +118,7 @@
             border-radius: 999px;
         }
 
-        /* --- MAIN PAGE CONTAINER & CARDS --- */
+        /* --- MAIN PAGE CONTAINER & STYLED TEXT CARDS --- */
         .container {
             position: relative;
             z-index: 1;
@@ -121,12 +127,20 @@
         }
 
         section {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(6px);
-            border-radius: 14px;
-            padding: 22px 26px;
-            margin: 20px auto;
-            box-shadow: 0 8px 20px rgba(3, 64, 120, 0.14);
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at top right, rgba(144, 224, 239, 0.26), transparent 45%),
+                linear-gradient(160deg, rgba(255, 255, 255, 0.96), rgba(240, 249, 255, 0.9));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            border-top: 4px solid #034078;
+            border-radius: 16px;
+            padding: 24px 28px;
+            margin: 22px auto;
+            box-shadow:
+                0 10px 24px rgba(3, 64, 120, 0.14),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.25s ease;
@@ -137,75 +151,85 @@
             transform: translateY(0);
         }
 
-        body.loaded section:nth-child(1) { transition-delay: 0.08s; }
-        body.loaded section:nth-child(2) { transition-delay: 0.16s; }
-        body.loaded section:nth-child(3) { transition-delay: 0.24s; }
+        body.loaded section:nth-child(1) { transition-delay: 0.08s; border-top-color: #034078; }
+        body.loaded section:nth-child(2) { transition-delay: 0.16s; border-top-color: #0077b6; }
+        body.loaded section:nth-child(3) { transition-delay: 0.24s; border-top-color: #1d4ed8; }
 
         body.loaded section:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 26px rgba(3, 64, 120, 0.2);
+            box-shadow:
+                0 14px 30px rgba(3, 64, 120, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 1);
         }
 
         h1 {
             color: #034078;
             margin: 0 0 8px;
             font-size: 2rem;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
         }
 
         h2 {
             color: #034078;
             margin-top: 0;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             font-size: 1.35rem;
             display: inline-block;
-            border-bottom: 2px solid #90e0ef;
-            padding-bottom: 4px;
+            background: linear-gradient(90deg, rgba(144, 224, 239, 0.45), rgba(160, 196, 255, 0.35));
+            border-bottom: 2px solid #0077b6;
+            border-radius: 8px 8px 0 0;
+            padding: 4px 12px;
         }
 
         p {
             margin: 6px 0 12px;
+            color: #1e293b;
         }
 
         ul {
             list-style-type: none;
             padding: 0;
-            margin: 12px 0 0;
+            margin: 14px 0 0;
         }
 
         ul li {
             margin: 12px 0;
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(224, 242, 254, 0.75), rgba(240, 249, 255, 0.55));
+            border: 1px solid rgba(3, 64, 120, 0.1);
         }
 
         a.btn-link {
             display: inline-block;
-            background: linear-gradient(135deg, #034078, #1d4ed8);
+            background: linear-gradient(135deg, #034078, #0077b6 55%, #1d4ed8);
             color: #ffffff;
             font-weight: bold;
             padding: 12px 24px;
             border-radius: 50px;
             text-decoration: none;
-            box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);
+            box-shadow: 0 4px 14px rgba(3, 64, 120, 0.3);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         a.btn-link:hover {
             transform: scale(1.05);
-            box-shadow: 0 6px 18px rgba(29, 78, 216, 0.45);
+            box-shadow: 0 6px 20px rgba(29, 78, 216, 0.45);
         }
 
         iframe {
             margin-top: 12px;
             border: 2px solid #034078;
-            border-radius: 10px;
+            border-radius: 12px;
             width: 100%;
             max-width: 600px;
             height: 360px;
         }
 
         @keyframes bgShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% { background-position: 0% 0%, 100% 0%, 50% 100%, 0% 50%; }
+            50% { background-position: 0% 0%, 100% 0%, 50% 100%, 100% 50%; }
+            100% { background-position: 0% 0%, 100% 0%, 50% 100%, 0% 50%; }
         }
 
         @keyframes pulseCross {
@@ -326,7 +350,7 @@
             setTimeout(finishLoader, duration + 1000);
         }
 
-        // --- 2. BACKGROUND MOVING SMALL CIRCLES ---
+        // --- 2. BACKGROUND MOVING SMALL CIRCLES & RINGS ---
         function initBackgroundParticles() {
             const canvas = document.getElementById("bgParticles");
             if (!canvas) return;
@@ -340,20 +364,21 @@
             window.addEventListener("resize", resize);
 
             const colors = [
-                "rgba(3, 64, 120, 0.16)",
-                "rgba(29, 78, 216, 0.14)",
-                "rgba(255, 255, 255, 0.45)",
-                "rgba(0, 119, 182, 0.16)"
+                "rgba(3, 64, 120, 0.18)",
+                "rgba(29, 78, 216, 0.16)",
+                "rgba(255, 255, 255, 0.55)",
+                "rgba(0, 119, 182, 0.18)"
             ];
 
-            const count = Math.min(45, Math.floor((window.innerWidth * window.innerHeight) / 22000));
-            const circles = Array.from({ length: Math.max(18, count) }, function () {
+            const count = Math.min(55, Math.floor((window.innerWidth * window.innerHeight) / 18000));
+            const circles = Array.from({ length: Math.max(22, count) }, function (_, idx) {
                 return {
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    r: 3 + Math.random() * 6,
-                    vx: (Math.random() - 0.5) * 0.7,
-                    vy: (Math.random() - 0.5) * 0.7,
+                    r: 3 + Math.random() * 6.5,
+                    vx: (Math.random() - 0.5) * 0.75,
+                    vy: (Math.random() - 0.5) * 0.75,
+                    ring: idx % 4 === 0,
                     color: colors[Math.floor(Math.random() * colors.length)]
                 };
             });
@@ -366,15 +391,21 @@
                     c.x += c.vx;
                     c.y += c.vy;
 
-                    if (c.x < -c.r) c.x = canvas.width + c.r;
-                    if (c.x > canvas.width + c.r) c.x = -c.r;
-                    if (c.y < -c.r) c.y = canvas.height + c.r;
-                    if (c.y > canvas.height + c.r) c.y = -c.r;
+                    if (c.x < -c.r * 2) c.x = canvas.width + c.r * 2;
+                    if (c.x > canvas.width + c.r * 2) c.x = -c.r * 2;
+                    if (c.y < -c.r * 2) c.y = canvas.height + c.r * 2;
+                    if (c.y > canvas.height + c.r * 2) c.y = -c.r * 2;
 
                     ctx.beginPath();
                     ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
-                    ctx.fillStyle = c.color;
-                    ctx.fill();
+                    if (c.ring) {
+                        ctx.strokeStyle = c.color;
+                        ctx.lineWidth = 1.6;
+                        ctx.stroke();
+                    } else {
+                        ctx.fillStyle = c.color;
+                        ctx.fill();
+                    }
                 }
 
                 requestAnimationFrame(drawBg);
