@@ -87,7 +87,7 @@
             width: 0%;
             background: linear-gradient(90deg, #90e0ef, #ffffff);
             border-radius: 999px;
-            transition: width 0.12s linear;
+            transition: width 0.1s linear;
         }
 
         /* --- MAIN PAGE CONTAINER & CARDS --- */
@@ -116,7 +116,6 @@
         body.loaded section:nth-child(1) { transition-delay: 0.1s; }
         body.loaded section:nth-child(2) { transition-delay: 0.22s; }
         body.loaded section:nth-child(3) { transition-delay: 0.34s; }
-        body.loaded section:nth-child(4) { transition-delay: 0.46s; }
 
         body.loaded section:hover {
             transform: translateY(-4px);
@@ -150,7 +149,7 @@
         }
 
         ul li {
-            margin: 10px 0;
+            margin: 12px 0;
         }
 
         a.btn-link {
@@ -192,7 +191,7 @@
     </style>
 </head>
 <body>
-    <!-- 0% to 100% Opening Loader -->
+    <!-- 0% to 100% Opening Loader (12 seconds) -->
     <div class="loader-screen" id="loaderScreen">
         <div class="loader-cross">✝</div>
         <p class="loader-church">Gospel of Christ Fellowship</p>
@@ -211,13 +210,13 @@
         </section>
 
         <section>
-            <h2>About Us</h2>
-            <p>Gospel of Christ Fellowship Maticmatic in Sta. Barbara, Pangasinan.</p>
-        </section>
-
-        <section>
-            <h2>Links</h2>
+            <h2>Links &amp; Info</h2>
             <ul>
+                <li>
+                    <a class="btn-link" href="about.html">
+                        About Us &amp; Sunday Services
+                    </a>
+                </li>
                 <li>
                     <a class="btn-link" href="https://www.facebook.com/gcfmm2023" target="_blank" rel="noopener noreferrer">
                         Visit Our Facebook Page
@@ -230,4 +229,40 @@
             <h2>Location</h2>
             <p>We are located in Maticmatic, Sta. Barbara, Pangasinan</p>
             <iframe
-                src="
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d122777.35520395542!2d120.36112730116957!3d15.919945908670009!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x339141f596049c1b%3A0xca8bba65d439f027!2sGospel%20of%20Christ%20Fellowship%20Maticmatic!5e0!3m2!1sen!2sph!4v1795173584442!5m2!1sen!2sph"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Gospel of Christ Fellowship Maticmatic Location"
+            ></iframe>
+        </section>
+    </div>
+
+    <script>
+        (function () {
+            const percentEl = document.getElementById("loaderPercent");
+            const barFillEl = document.getElementById("loaderBarFill");
+            const loaderScreen = document.getElementById("loaderScreen");
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 1;
+                if (progress > 100) {
+                    progress = 100;
+                }
+
+                percentEl.textContent = progress + "%";
+                barFillEl.style.width = progress + "%";
+
+                if (progress === 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        loaderScreen.classList.add("done");
+                        document.body.classList.add("loaded");
+                    }, 400);
+                }
+            }, 120); // 100 steps * 120ms = 12 seconds total
+        })();
+    </script>
+</body>
+</html>
