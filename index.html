@@ -64,6 +64,10 @@
             pointer-events: none;
         }
 
+        body.skip-loader .loader-screen {
+            display: none !important;
+        }
+
         .loader-cross {
             font-size: 2.8rem;
             margin-bottom: 8px;
@@ -133,9 +137,9 @@
             transform: translateY(0);
         }
 
-        body.loaded section:nth-child(1) { transition-delay: 0.1s; }
-        body.loaded section:nth-child(2) { transition-delay: 0.22s; }
-        body.loaded section:nth-child(3) { transition-delay: 0.34s; }
+        body.loaded section:nth-child(1) { transition-delay: 0.08s; }
+        body.loaded section:nth-child(2) { transition-delay: 0.16s; }
+        body.loaded section:nth-child(3) { transition-delay: 0.24s; }
 
         body.loaded section:hover {
             transform: translateY(-4px);
@@ -211,6 +215,19 @@
     </style>
 </head>
 <body>
+    <!-- Check immediately if returning from about.html or already loaded this session -->
+    <script>
+        (function () {
+            const shouldSkip =
+                sessionStorage.getItem("gcfmm_skip_loader") === "1" ||
+                sessionStorage.getItem("gcfmm_loaded_once") === "1";
+            if (shouldSkip) {
+                sessionStorage.removeItem("gcfmm_skip_loader");
+                document.body.classList.add("skip-loader", "loaded");
+            }
+        })();
+    </script>
+
     <!-- Background Moving Circles -->
     <canvas id="bgParticles"></canvas>
 
@@ -265,8 +282,13 @@
     </div>
 
     <script>
-        // --- 1. 2.5-SECOND 0-100% LOADER ---
+        // --- 1. 2.5-SECOND 0-100% LOADER (SKIPS WHEN RETURNING) ---
         function startLoader() {
+            if (document.body.classList.contains("skip-loader")) {
+                document.body.classList.add("loaded");
+                return;
+            }
+
             const percentEl = document.getElementById("loaderPercent");
             const barFillEl = document.getElementById("loaderBarFill");
             const loaderScreen = document.getElementById("loaderScreen");
@@ -277,6 +299,7 @@
             const startTime = performance.now();
 
             function finishLoader() {
+                sessionStorage.setItem("gcfmm_loaded_once", "1");
                 percentEl.textContent = "100%";
                 barFillEl.style.width = "100%";
                 setTimeout(function () {
