@@ -36,7 +36,7 @@
             align-items: center;
             z-index: 9999;
             padding: 24px;
-            transition: opacity 0.6s ease, visibility 0.6s ease;
+            transition: opacity 0.7s ease, visibility 0.7s ease;
         }
 
         .loader-screen.done {
@@ -48,7 +48,7 @@
         .loader-cross {
             font-size: 2.8rem;
             margin-bottom: 8px;
-            animation: pulseCross 1.5s ease-in-out infinite;
+            animation: pulseCross 1.6s ease-in-out infinite;
         }
 
         .loader-church {
@@ -87,7 +87,7 @@
             width: 0%;
             background: linear-gradient(90deg, #90e0ef, #ffffff);
             border-radius: 999px;
-            transition: width 0.05s linear;
+            transition: width 0.08s linear;
         }
 
         /* --- MAIN PAGE CONTAINER & CARDS --- */
@@ -247,7 +247,7 @@
 
             let progress = 0;
             const interval = setInterval(() => {
-                progress += 2;
+                progress += 1;
                 if (progress > 100) {
                     progress = 100;
                 }
@@ -260,9 +260,9 @@
                     setTimeout(() => {
                         loaderScreen.classList.add("done");
                         document.body.classList.add("loaded");
-                    }, 250);
+                    }, 400);
                 }
-            }, 35); // ~1.75 seconds total from 0% to 100%
+            }, 50); // 100 steps * 50ms = ~5 seconds total
         })();
     </script>
 </body>
