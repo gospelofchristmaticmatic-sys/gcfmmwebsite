@@ -190,7 +190,7 @@
     </style>
 </head>
 <body>
-    <!-- 0% to 100% Opening Loader (12 seconds) -->
+    <!-- 0% to 100% Opening Loader (8 seconds) -->
     <div class="loader-screen" id="loaderScreen">
         <div class="loader-cross">✝</div>
         <p class="loader-church">Gospel of Christ Fellowship</p>
@@ -245,7 +245,7 @@
 
             if (!percentEl || !barFillEl || !loaderScreen) return;
 
-            const duration = 12000; // 12 seconds exact
+            const duration = 8000; // 8 seconds exact
             const startTime = performance.now();
 
             function finishLoader() {
@@ -273,7 +273,7 @@
 
             requestAnimationFrame(updateProgress);
 
-            // Safety fallback: force open after 13 seconds even if browser throttles animations
+            // Safety fallback: force open after 9 seconds even if browser throttles animations
             setTimeout(finishLoader, duration + 1000);
         }
 
