@@ -24,6 +24,25 @@
             overflow-x: hidden;
         }
 
+        /* --- BACKGROUND & CLICK PARTICLE CANVASES --- */
+        #bgParticles {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        #clickParticles {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9998;
+            pointer-events: none;
+        }
+
         /* --- 0-100% LOADING SCREEN --- */
         .loader-screen {
             position: fixed;
@@ -91,6 +110,8 @@
 
         /* --- MAIN PAGE CONTAINER & CARDS --- */
         .container {
+            position: relative;
+            z-index: 1;
             max-width: 720px;
             margin: 0 auto;
         }
@@ -190,6 +211,12 @@
     </style>
 </head>
 <body>
+    <!-- Background Moving Circles -->
+    <canvas id="bgParticles"></canvas>
+
+    <!-- Link Click Popping Circles -->
+    <canvas id="clickParticles"></canvas>
+
     <!-- 0% to 100% Opening Loader (2.5 seconds) -->
     <div class="loader-screen" id="loaderScreen">
         <div class="loader-cross">✝</div>
@@ -238,6 +265,7 @@
     </div>
 
     <script>
+        // --- 1. 2.5-SECOND 0-100% LOADER ---
         function startLoader() {
             const percentEl = document.getElementById("loaderPercent");
             const barFillEl = document.getElementById("loaderBarFill");
@@ -245,7 +273,7 @@
 
             if (!percentEl || !barFillEl || !loaderScreen) return;
 
-            const duration = 2500; // 2.5 seconds exact
+            const duration = 2500;
             const startTime = performance.now();
 
             function finishLoader() {
@@ -272,15 +300,160 @@
             }
 
             requestAnimationFrame(updateProgress);
-
-            // Safety fallback: force open after 3.5 seconds even if throttled
             setTimeout(finishLoader, duration + 1000);
         }
 
-        if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", startLoader);
-        } else {
+        // --- 2. BACKGROUND MOVING SMALL CIRCLES ---
+        function initBackgroundParticles() {
+            const canvas = document.getElementById("bgParticles");
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener("resize", resize);
+
+            const colors = [
+                "rgba(3, 64, 120, 0.16)",
+                "rgba(29, 78, 216, 0.14)",
+                "rgba(255, 255, 255, 0.45)",
+                "rgba(0, 119, 182, 0.16)"
+            ];
+
+            const count = Math.min(45, Math.floor((window.innerWidth * window.innerHeight) / 22000));
+            const circles = Array.from({ length: Math.max(18, count) }, function () {
+                return {
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    r: 3 + Math.random() * 6,
+                    vx: (Math.random() - 0.5) * 0.7,
+                    vy: (Math.random() - 0.5) * 0.7,
+                    color: colors[Math.floor(Math.random() * colors.length)]
+                };
+            });
+
+            function drawBg() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (let i = 0; i < circles.length; i++) {
+                    const c = circles[i];
+                    c.x += c.vx;
+                    c.y += c.vy;
+
+                    if (c.x < -c.r) c.x = canvas.width + c.r;
+                    if (c.x > canvas.width + c.r) c.x = -c.r;
+                    if (c.y < -c.r) c.y = canvas.height + c.r;
+                    if (c.y > canvas.height + c.r) c.y = -c.r;
+
+                    ctx.beginPath();
+                    ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+                    ctx.fillStyle = c.color;
+                    ctx.fill();
+                }
+
+                requestAnimationFrame(drawBg);
+            }
+
+            requestAnimationFrame(drawBg);
+        }
+
+        // --- 3. LINK CLICK POPPING CIRCLE PARTICLES ---
+        function initClickParticles() {
+            const canvas = document.getElementById("clickParticles");
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener("resize", resize);
+
+            const burstColors = ["#034078", "#1d4ed8", "#0077b6", "#90e0ef", "#ffffff"];
+            const pops = [];
+
+            function spawnPop(x, y) {
+                const count = 18;
+                for (let i = 0; i < count; i++) {
+                    const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.25;
+                    const speed = 2.2 + Math.random() * 4.2;
+                    pops.push({
+                        x: x,
+                        y: y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        r: 3 + Math.random() * 4.5,
+                        alpha: 1,
+                        color: burstColors[Math.floor(Math.random() * burstColors.length)]
+                    });
+                }
+            }
+
+            function drawPops() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (let i = pops.length - 1; i >= 0; i--) {
+                    const p = pops[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vx *= 0.96;
+                    p.vy *= 0.96;
+                    p.r *= 0.96;
+                    p.alpha -= 0.03;
+
+                    if (p.alpha <= 0.02 || p.r < 0.5) {
+                        pops.splice(i, 1);
+                        continue;
+                    }
+
+                    ctx.save();
+                    ctx.globalAlpha = Math.max(0, p.alpha);
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                requestAnimationFrame(drawPops);
+            }
+
+            requestAnimationFrame(drawPops);
+
+            document.querySelectorAll("a").forEach(function (link) {
+                link.addEventListener("click", function (e) {
+                    const x = e.clientX || link.getBoundingClientRect().left + link.offsetWidth / 2;
+                    const y = e.clientY || link.getBoundingClientRect().top + link.offsetHeight / 2;
+                    spawnPop(x, y);
+
+                    const href = link.getAttribute("href");
+                    const opensNewTab = link.getAttribute("target") === "_blank";
+                    const isSameTabPage = href && !href.startsWith("#") && !opensNewTab;
+
+                    if (isSameTabPage) {
+                        e.preventDefault();
+                        setTimeout(function () {
+                            window.location.href = href;
+                        }, 260);
+                    }
+                });
+            });
+        }
+
+        function initAll() {
             startLoader();
+            initBackgroundParticles();
+            initClickParticles();
+        }
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", initAll);
+        } else {
+            initAll();
         }
     </script>
 </body>
