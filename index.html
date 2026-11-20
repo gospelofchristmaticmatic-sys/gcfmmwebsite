@@ -36,7 +36,7 @@
             align-items: center;
             z-index: 9999;
             padding: 24px;
-            transition: opacity 0.7s ease, visibility 0.7s ease;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
         }
 
         .loader-screen.done {
@@ -190,7 +190,7 @@
     </style>
 </head>
 <body>
-    <!-- 0% to 100% Opening Loader (8 seconds) -->
+    <!-- 0% to 100% Opening Loader (2.5 seconds) -->
     <div class="loader-screen" id="loaderScreen">
         <div class="loader-cross">✝</div>
         <p class="loader-church">Gospel of Christ Fellowship</p>
@@ -245,7 +245,7 @@
 
             if (!percentEl || !barFillEl || !loaderScreen) return;
 
-            const duration = 8000; // 8 seconds exact
+            const duration = 2500; // 2.5 seconds exact
             const startTime = performance.now();
 
             function finishLoader() {
@@ -254,7 +254,7 @@
                 setTimeout(function () {
                     loaderScreen.classList.add("done");
                     document.body.classList.add("loaded");
-                }, 350);
+                }, 250);
             }
 
             function updateProgress(now) {
@@ -273,7 +273,7 @@
 
             requestAnimationFrame(updateProgress);
 
-            // Safety fallback: force open after 9 seconds even if browser throttles animations
+            // Safety fallback: force open after 3.5 seconds even if throttled
             setTimeout(finishLoader, duration + 1000);
         }
 
