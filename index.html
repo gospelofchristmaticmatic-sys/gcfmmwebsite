@@ -87,7 +87,6 @@
             width: 0%;
             background: linear-gradient(90deg, #90e0ef, #ffffff);
             border-radius: 999px;
-            transition: width 0.1s linear;
         }
 
         /* --- MAIN PAGE CONTAINER & CARDS --- */
@@ -239,30 +238,50 @@
     </div>
 
     <script>
-        (function () {
+        function startLoader() {
             const percentEl = document.getElementById("loaderPercent");
             const barFillEl = document.getElementById("loaderBarFill");
             const loaderScreen = document.getElementById("loaderScreen");
 
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 1;
-                if (progress > 100) {
-                    progress = 100;
-                }
+            if (!percentEl || !barFillEl || !loaderScreen) return;
+
+            const duration = 12000; // 12 seconds exact
+            const startTime = performance.now();
+
+            function finishLoader() {
+                percentEl.textContent = "100%";
+                barFillEl.style.width = "100%";
+                setTimeout(function () {
+                    loaderScreen.classList.add("done");
+                    document.body.classList.add("loaded");
+                }, 350);
+            }
+
+            function updateProgress(now) {
+                const elapsed = now - startTime;
+                const progress = Math.min(100, Math.floor((elapsed / duration) * 100));
 
                 percentEl.textContent = progress + "%";
                 barFillEl.style.width = progress + "%";
 
-                if (progress === 100) {
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        loaderScreen.classList.add("done");
-                        document.body.classList.add("loaded");
-                    }, 400);
+                if (elapsed < duration) {
+                    requestAnimationFrame(updateProgress);
+                } else {
+                    finishLoader();
                 }
-            }, 120); // 100 steps * 120ms = 12 seconds total
-        })();
+            }
+
+            requestAnimationFrame(updateProgress);
+
+            // Safety fallback: force open after 13 seconds even if browser throttles animations
+            setTimeout(finishLoader, duration + 1000);
+        }
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", startLoader);
+        } else {
+            startLoader();
+        }
     </script>
 </body>
 </html>
