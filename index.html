@@ -2,68 +2,134 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GCFMM WEBSITE</title>
+
+    <!-- CSS goes right here inside <style> -->
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             text-align: center;
             font-family: Arial, sans-serif;
             background: linear-gradient(to bottom, #a0c4ff, #caf0f8);
+            min-height: 100vh;
             color: #333;
             margin: 0;
-            padding: 20px;
+            padding: 32px 16px;
+            line-height: 1.6;
         }
-        h1, h2 {
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        section {
+            background: rgba(255, 255, 255, 0.88);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 18px auto;
+            box-shadow: 0 6px 16px rgba(3, 64, 120, 0.12);
+        }
+
+        h1 {
             color: #034078;
+            margin-bottom: 6px;
+            font-size: 2rem;
         }
-        a {
-            color: #1d4ed8;
-            text-decoration: none;
+
+        h2 {
+            color: #034078;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
         }
-        a:hover {
-            text-decoration: underline;
+
+        p {
+            margin: 6px 0 12px;
         }
-        img {
-            margin-top: 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
+
         ul {
             list-style-type: none;
             padding: 0;
+            margin: 12px 0 0;
         }
+
         ul li {
-            margin: 8px 0;
+            margin: 10px 0;
         }
-        iframe {
+
+        a.btn-link {
+            display: inline-block;
+            background-color: #034078;
+            color: #ffffff;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.2s ease, transform 0.15s ease;
+        }
+
+        a.btn-link:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        img {
             margin-top: 15px;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        iframe {
+            margin-top: 12px;
             border: 2px solid #034078;
             border-radius: 8px;
-            width: 300px;
-            height: 250px;
+            width: 100%;
+            max-width: 600px;
+            height: 360px;
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to GCFMM WEBSITE</h1>
-    <p>You are all welcome to our church</p>
+    <div class="container">
+        <section>
+            <h1>Welcome to GCFMM WEBSITE</h1>
+            <p>You are all welcome to our church</p>
+        </section>
 
-    <h2>About Me</h2>
-    <p></p>
+        <section>
+            <h2>About Us</h2>
+            <p>Gospel of Christ Fellowship Maticmatic in Sta. Barbara, Pangasinan.</p>
+        </section>
 
-    <h2>My Links</h2>
-    <ul>
-        <li><a href="https://www.facebook.com/gcfmm2023" target="_blank" rel="noopener noreferrer">Facebook Page</a></li>
-    </ul>
+        <section>
+            <h2>Links</h2>
+            <ul>
+                <li>
+                    <a class="btn-link" href="https://www.facebook.com/gcfmm2023" target="_blank" rel="noopener noreferrer">
+                        Facebook Page
+                    </a>
+                </li>
+            </ul>
+        </section>
 
-   
-    <h2>Location</h2>
-    <p>We are located in MaticMatic, Sta. Barbara, Pangasinan</p>
-    <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d122777.35520395542!2d120.36112730116957!3d15.919945908670009!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x339141f596049c1b%3A0xca8bba65d439f027!2sGospel%20of%20Christ%20Fellowship%20Maticmatic!5e0!3m2!1sen!2sph!4v1795173584442!5m2!1sen!2sph" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"
-        allowfullscreen=""
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-        title="Dagupan Location"
-    ></iframe>
+        <section>
+            <h2>Location</h2>
+            <p>We are located in Maticmatic, Sta. Barbara, Pangasinan</p>
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d122777.35520395542!2d120.36112730116957!3d15.919945908670009!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x339141f596049c1b%3A0xca8bba65d439f027!2sGospel%20of%20Christ%20Fellowship%20Maticmatic!5e0!3m2!1sen!2sph!4v1795173584442!5m2!1sen!2sph"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Gospel of Christ Fellowship Maticmatic Location"
+            ></iframe>
+        </section>
+    </div>
 </body>
 </html>
