@@ -24,8 +24,8 @@
             overflow-x: hidden;
         }
 
-        /* --- OPENING SPLASH SCREEN OVERLAY --- */
-        .splash-screen {
+        /* --- 0-100% LOADING SCREEN --- */
+        .loader-screen {
             position: fixed;
             inset: 0;
             background: linear-gradient(135deg, #034078, #0077b6);
@@ -35,53 +35,62 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            padding: 20px;
-            animation: splashFadeOut 0.8s ease forwards;
-            animation-delay: 2.2s; /* Stays visible for 2.2 seconds before fading out */
+            padding: 24px;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
         }
 
-        .splash-cross {
-            font-size: 3rem;
-            margin-bottom: 10px;
+        .loader-screen.done {
             opacity: 0;
-            animation: popIn 0.7s ease forwards;
+            visibility: hidden;
+            pointer-events: none;
         }
 
-        .splash-title {
-            font-size: 1.9rem;
+        .loader-cross {
+            font-size: 2.8rem;
+            margin-bottom: 8px;
+            animation: pulseCross 1.5s ease-in-out infinite;
+        }
+
+        .loader-church {
+            font-size: 1.5rem;
             font-weight: bold;
-            letter-spacing: 1px;
-            margin: 0;
-            opacity: 0;
-            animation: slideUpText 0.8s ease 0.3s forwards;
+            margin: 0 0 4px;
         }
 
-        .splash-sub {
-            font-size: 1rem;
+        .loader-sub {
+            font-size: 0.95rem;
             color: #caf0f8;
-            margin-top: 6px;
-            opacity: 0;
-            animation: slideUpText 0.8s ease 0.6s forwards;
+            margin: 0 0 24px;
         }
 
-        .splash-loader {
-            width: 140px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.25);
-            border-radius: 4px;
-            margin-top: 22px;
+        .loader-percent {
+            font-size: 2.6rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #90e0ef;
+            margin-bottom: 12px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .loader-bar-track {
+            width: 260px;
+            max-width: 85vw;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
             overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25);
         }
 
-        .splash-loader-bar {
+        .loader-bar-fill {
             height: 100%;
             width: 0%;
-            background: #90e0ef;
-            border-radius: 4px;
-            animation: loadProgress 2s ease-in-out forwards;
+            background: linear-gradient(90deg, #90e0ef, #ffffff);
+            border-radius: 999px;
+            transition: width 0.05s linear;
         }
 
-        /* --- MAIN PAGE CONTAINER & CARD ANIMATIONS --- */
+        /* --- MAIN PAGE CONTAINER & CARDS --- */
         .container {
             max-width: 720px;
             margin: 0 auto;
@@ -95,18 +104,21 @@
             margin: 20px auto;
             box-shadow: 0 8px 20px rgba(3, 64, 120, 0.14);
             opacity: 0;
-            transform: translateY(25px);
-            animation: cardReveal 0.7s ease forwards;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.25s ease;
         }
 
-        /* Staggered reveal after splash screen finishes */
-        section:nth-child(1) { animation-delay: 2.4s; }
-        section:nth-child(2) { animation-delay: 2.6s; }
-        section:nth-child(3) { animation-delay: 2.8s; }
-        section:nth-child(4) { animation-delay: 3.0s; }
+        body.loaded section {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-        section:hover {
+        body.loaded section:nth-child(1) { transition-delay: 0.1s; }
+        body.loaded section:nth-child(2) { transition-delay: 0.22s; }
+        body.loaded section:nth-child(3) { transition-delay: 0.34s; }
+        body.loaded section:nth-child(4) { transition-delay: 0.46s; }
+
+        body.loaded section:hover {
             transform: translateY(-4px);
             box-shadow: 0 12px 26px rgba(3, 64, 120, 0.2);
         }
@@ -167,60 +179,27 @@
             height: 360px;
         }
 
-        /* --- KEYFRAME ANIMATIONS --- */
         @keyframes bgShift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        @keyframes popIn {
-            0% { opacity: 0; transform: scale(0.5); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        @keyframes slideUpText {
-            0% { opacity: 0; transform: translateY(15px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes loadProgress {
-            0% { width: 0%; }
-            100% { width: 100%; }
-        }
-
-        @keyframes splashFadeOut {
-            0% {
-                opacity: 1;
-                visibility: visible;
-            }
-            100% {
-                opacity: 0;
-                visibility: hidden;
-                pointer-events: none;
-            }
-        }
-
-        @keyframes cardReveal {
-            0% {
-                opacity: 0;
-                transform: translateY(25px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes pulseCross {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.12); }
         }
     </style>
 </head>
 <body>
-    <!-- Opening Intro Screen -->
-    <div class="splash-screen">
-        <div class="splash-cross">✝</div>
-        <p class="splash-title">Gospel of Christ Fellowship</p>
-        <p class="splash-sub">Maticmatic, Sta. Barbara, Pangasinan</p>
-        <div class="splash-loader">
-            <div class="splash-loader-bar"></div>
+    <!-- 0% to 100% Opening Loader -->
+    <div class="loader-screen" id="loaderScreen">
+        <div class="loader-cross">✝</div>
+        <p class="loader-church">Gospel of Christ Fellowship</p>
+        <p class="loader-sub">Maticmatic, Sta. Barbara, Pangasinan</p>
+        <div class="loader-percent" id="loaderPercent">0%</div>
+        <div class="loader-bar-track">
+            <div class="loader-bar-fill" id="loaderBarFill"></div>
         </div>
     </div>
 
@@ -259,5 +238,32 @@
             ></iframe>
         </section>
     </div>
+
+    <script>
+        (function () {
+            const percentEl = document.getElementById("loaderPercent");
+            const barFillEl = document.getElementById("loaderBarFill");
+            const loaderScreen = document.getElementById("loaderScreen");
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 2;
+                if (progress > 100) {
+                    progress = 100;
+                }
+
+                percentEl.textContent = progress + "%";
+                barFillEl.style.width = progress + "%";
+
+                if (progress === 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        loaderScreen.classList.add("done");
+                        document.body.classList.add("loaded");
+                    }, 250);
+                }
+            }, 35); // ~1.75 seconds total from 0% to 100%
+        })();
+    </script>
 </body>
 </html>
