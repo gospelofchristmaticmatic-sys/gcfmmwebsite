@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Location &amp; Plan a Visit - Gospel Of Christ MaticMatic Inc</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', Arial, sans-serif;
+            color: #1e293b;
+            background-color: #ffffff;
+            line-height: 1.65;
+            overflow-x: hidden;
+        }
+
+        #bgParticles {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        #clickParticles {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9998;
+            pointer-events: none;
+        }
+
+        /* --- HERO HEADER --- */
+        .page-hero {
+            position: relative;
+            color: #ffffff;
+            background:
+                linear-gradient(105deg, rgba(16, 35, 50, 0.94) 0%, rgba(22, 46, 66, 0.82) 60%, rgba(27, 54, 77, 0.72) 100%),
+                url('https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1800&q=80');
+            background-size: cover;
+            background-position: center;
+            padding-bottom: 64px;
+        }
+
+        .navbar {
+            position: relative;
+            z-index: 5;
+            max-width: 1180px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .brand-cross {
+            width: 28px;
+            height: 40px;
+            flex-shrink: 0;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .brand-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            line-height: 1.1;
+        }
+
+        .brand-subtitle {
+            font-size: 0.72rem;
+            letter-spacing: 2.8px;
+            color: #cbd5e1;
+            margin-top: 2px;
+        }
+
+        .brand-tagline {
+            font-size: 0.56rem;
+            letter-spacing: 1.4px;
+            color: #94a3b8;
+            margin-top: 4px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #e2e8f0;
+            text-decoration: none;
+            font-size: 0.76rem;
+            font-weight: 600;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+
+        .nav-links a.nav-pill {
+            border: 1.5px solid rgba(255, 255, 255, 0.75);
+            padding: 9px 20px;
+            border-radius: 999px;
+            color: #ffffff;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .nav-links a.nav-pill:hover {
+            background: #ffffff;
+            color: #162e42;
+        }
+
+        .page-hero-content {
+            position: relative;
+            z-index: 5;
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 28px 32px 0;
+            text-align: left;
+        }
+
+        .eyebrow {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            color: #93c5fd;
+            margin-bottom: 10px;
+        }
+
+        .page-hero h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+            margin: 0 0 14px;
+            line-height: 1.12;
+        }
+
+        .page-hero p {
+            max-width: 620px;
+            font-size: 1.05rem;
+            color: #e2e8f0;
+            margin: 0;
+        }
+
+        /* --- SPLIT PLAN YOUR VISIT + MAP --- */
+        .visit-section {
+            position: relative;
+            z-index: 3;
+            background: #eef2f6;
+            padding: 68px 32px;
+        }
+
+        .visit-grid {
+            max-width: 1080px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1.15fr;
+            gap: 44px;
+            align-items: center;
+        }
+
+        .visit-text {
+            text-align: left;
+        }
+
+        .visit-text h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.3rem;
+            font-weight: 700;
+            color: #162e42;
+            margin: 0 0 14px;
+            line-height: 1.15;
+        }
+
+        .visit-text p {
+            color: #475569;
+            font-size: 0.98rem;
+            margin: 0 0 12px;
+            max-width: 440px;
+        }
+
+        .visit-address {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: #1b364d;
+            margin-bottom: 24px !important;
+        }
+
+        .visit-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .btn-solid-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #1b364d;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.76rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 13px 26px;
+            border-radius: 999px;
+            box-shadow: 0 6px 16px rgba(27, 54, 77, 0.22);
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .btn-solid-pill:hover {
+            background: #102332;
+            transform: translateY(-2px);
+        }
+
+        .visit-map-card {
+            background: #ffffff;
+            padding: 10px;
+            border-radius: 14px;
+            box-shadow: 0 14px 30px rgba(16, 35, 50, 0.12);
+        }
+
+        .visit-map-card iframe {
+            display: block;
+            width: 100%;
+            height: 360px;
+            border: 0;
+            border-radius: 10px;
+        }
+
+        /* --- FOOTER --- */
+        .site-footer {
+            position: relative;
+            z-index: 3;
+            background: #162e42;
+            color: #ffffff;
+            padding: 44px 32px;
+        }
+
+        .footer-grid {
+            max-width: 1080px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr auto;
+            gap: 28px;
+            align-items: center;
+            text-align: left;
+        }
+
+        .footer-motto {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.45rem;
+            line-height: 1.25;
+            margin: 0;
+            color: #ffffff;
+        }
+
+        .footer-col-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #f8fafc;
+            margin: 0 0 4px;
+        }
+
+        .footer-col-sub {
+            font-size: 0.74rem;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: #cbd5e1;
+            margin: 0;
+        }
+
+        @media (max-width: 820px) {
+            .visit-grid,
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            .navbar {
+                padding: 20px;
+            }
+            .page-hero-content {
+                padding: 20px 20px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bgParticles"></canvas>
+    <canvas id="clickParticles"></canvas>
+
+    <!-- PAGE HERO -->
+    <header class="page-hero">
+        <nav class="navbar">
+            <a class="brand" href="index.html">
+                <svg class="brand-cross" viewBox="0 0 32 48" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="16" y1="2" x2="16" y2="46" />
+                    <line x1="5" y1="14" x2="27" y2="14" />
+                </svg>
+                <div class="brand-text">
+                    <span class="brand-title">Gospel Of Christ MaticMatic Inc</span>
+                    <span class="brand-subtitle">CHURCH</span>
+                    <span class="brand-tagline">For People. For Jesus. For Maticmatic.</span>
+                </div>
+            </a>
+
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="location.html">Location</a>
+                <a href="https://www.facebook.com/gcfmm2023" target="_blank" rel="noopener noreferrer">Facebook</a>
+                <a class="nav-pill" href="index.html">← Back to Home</a>
+            </div>
+        </nav>
+
+        <div class="page-hero-content">
+            <span class="eyebrow">We'd Love to Meet You</span>
+            <h1>Location &amp; Plan a Visit</h1>
+            <p>Find our church in Maticmatic, Sta. Barbara, Pangasinan. Everyone is welcome to join us this Sunday.</p>
+        </div>
+    </header>
+
+    <!-- LOCATION + MAP SECTION -->
+    <section class="visit-section">
+        <div class="visit-grid">
+            <div class="visit-text">
+                <span class="eyebrow" style="color: #3b6e8c;">Where to Find Us</span>
+                <h2>Plan your visit</h2>
+                <p>Whether you're exploring faith, looking for a church family, or searching for hope — there's a place for you here.</p>
+                <p class="visit-address">📍 Maticmatic, Sta. Barbara, Pangasinan</p>
+                <p><strong>Sunday Worship:</strong> 8:30 AM<br />
+                   <strong>Tuesday Prayer:</strong> 7:00 PM<br />
+                   <strong>Thursday Midweek:</strong> 7:00 PM</p>
+
+                <div class="visit-actions" style="margin-top: 24px;">
+                    <a class="btn-solid-pill" href="about.html">View Gatherings →</a>
+                    <a class="btn-solid-pill" href="index.html" style="background: #3b6e8c;">← Back to Home</a>
+                </div>
+            </div>
+
+            <div class="visit-map-card">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d122777.35520395542!2d120.36112730116957!3d15.919945908670009!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x339141f596049c1b%3A0xca8bba65d439f027!2sGospel%20of%20Christ%20Fellowship%20Maticmatic!5e0!3m2!1sen!2sph!4v1795173584442!5m2!1sen!2sph"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="Gospel of Christ Fellowship Maticmatic Location"
+                ></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div>
+                <p class="footer-motto">Faith. Hope.<br />Love. Together.</p>
+            </div>
+
+            <div>
+                <p class="footer-col-title">Sundays 8:30 AM</p>
+                <p class="footer-col-sub">Tue Prayer • Thu Midweek 7:00 PM</p>
+            </div>
+
+            <div>
+                <p class="footer-col-title">Gospel Of Christ MaticMatic Inc</p>
+                <p class="footer-col-sub">Maticmatic, Sta. Barbara, Pangasinan</p>
+            </div>
+
+            <div>
+                <p class="footer-col-title">Page Views</p>
+                <a href="https://librecounter.org/" target="_blank" rel="noopener noreferrer">
+                    <img
+                        src="https://librecounter.org/white-yellow.svg"
+                        referrerpolicy="unsafe-url"
+                        alt="Visitor counter"
+                        style="height: 28px; vertical-align: middle;"
+                    />
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function initBackgroundParticles() {
+            const canvas = document.getElementById("bgParticles");
+            if (!canvas || !canvas.getContext) return;
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return;
+
+            function resize() {
+                canvas.width = window.innerWidth || 800;
+                canvas.height = window.innerHeight || 600;
+            }
+            resize();
+            window.addEventListener("resize", resize);
+
+            const colors = [
+                "rgba(27, 54, 77, 0.14)",
+                "rgba(59, 110, 140, 0.14)",
+                "rgba(255, 255, 255, 0.25)",
+                "rgba(147, 197, 253, 0.2)"
+            ];
+
+            const count = Math.min(45, Math.floor((canvas.width * canvas.height) / 22000));
+            const circles = Array.from({ length: Math.max(18, count) }, function (_, idx) {
+                return {
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    r: 3 + Math.random() * 5.5,
+                    vx: (Math.random() - 0.5) * 0.65,
+                    vy: (Math.random() - 0.5) * 0.65,
+                    ring: idx % 4 === 0,
+                    color: colors[Math.floor(Math.random() * colors.length)]
+                };
+            });
+
+            function drawBg() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (let i = 0; i < circles.length; i++) {
+                    const c = circles[i];
+                    c.x += c.vx;
+                    c.y += c.vy;
+
+                    if (c.x < -c.r * 2) c.x = canvas.width + c.r * 2;
+                    if (c.x > canvas.width + c.r * 2) c.x = -c.r * 2;
+                    if (c.y < -c.r * 2) c.y = canvas.height + c.r * 2;
+                    if (c.y > canvas.height + c.r * 2) c.y = -c.r * 2;
+
+                    ctx.beginPath();
+                    ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+                    if (c.ring) {
+                        ctx.strokeStyle = c.color;
+                        ctx.lineWidth = 1.5;
+                        ctx.stroke();
+                    } else {
+                        ctx.fillStyle = c.color;
+                        ctx.fill();
+                    }
+                }
+
+                requestAnimationFrame(drawBg);
+            }
+
+            requestAnimationFrame(drawBg);
+        }
+
+        function initClickParticles() {
+            const canvas = document.getElementById("clickParticles");
+            if (!canvas || !canvas.getContext) return;
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return;
+
+            function resize() {
+                canvas.width = window.innerWidth || 800;
+                canvas.height = window.innerHeight || 600;
+            }
+            resize();
+            window.addEventListener("resize", resize);
+
+            const burstColors = ["#162e42", "#3b6e8c", "#93c5fd", "#ffffff"];
+            const pops = [];
+
+            function spawnPop(x, y) {
+                const count = 18;
+                for (let i = 0; i < count; i++) {
+                    const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.25;
+                    const speed = 2.2 + Math.random() * 4.2;
+                    pops.push({
+                        x: x,
+                        y: y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        r: 3 + Math.random() * 4.5,
+                        alpha: 1,
+                        color: burstColors[Math.floor(Math.random() * burstColors.length)]
+                    });
+                }
+            }
+
+            function drawPops() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (let i = pops.length - 1; i >= 0; i--) {
+                    const p = pops[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vx *= 0.96;
+                    p.vy *= 0.96;
+                    p.r *= 0.96;
+                    p.alpha -= 0.03;
+
+                    if (p.alpha <= 0.02 || p.r < 0.5) {
+                        pops.splice(i, 1);
+                        continue;
+                    }
+
+                    ctx.save();
+                    ctx.globalAlpha = Math.max(0, p.alpha);
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                requestAnimationFrame(drawPops);
+            }
+
+            requestAnimationFrame(drawPops);
+
+            document.querySelectorAll("a").forEach(function (link) {
+                link.addEventListener("click", function (e) {
+                    const href = link.getAttribute("href") || "";
+
+                    if (href === "index.html" || href.startsWith("index.html#")) {
+                        try {
+                            sessionStorage.setItem("gcfmm_skip_loader", "1");
+                        } catch (err) {}
+                    }
+
+                    const rect = link.getBoundingClientRect();
+                    const x = e.clientX || (rect.left + rect.width / 2);
+                    const y = e.clientY || (rect.top + rect.height / 2);
+                    spawnPop(x, y);
+
+                    const opensNewTab = link.getAttribute("target") === "_blank";
+                    const isSameTabPage = href && !href.startsWith("#") && !opensNewTab;
+
+                    if (isSameTabPage) {
+                        e.preventDefault();
+                        setTimeout(function () {
+                            window.location.href = href;
+                        }, 260);
+                    }
+                });
+            });
+        }
+
+        function initAll() {
+            try { initBackgroundParticles(); } catch (e) { console.error(e); }
+            try { initClickParticles(); } catch (e) { console.error(e); }
+        }
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", initAll);
+        } else {
+            initAll();
+        }
+    </script>
+</body>
+</html>
