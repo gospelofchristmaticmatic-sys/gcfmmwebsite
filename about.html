@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>About Us - Gospel Of Christ Fellowship MaticMatic Inc.</title>
+    <title>About Us - Gospel Of Christ MaticMatic Inc</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -340,7 +340,7 @@
                     <line x1="5" y1="14" x2="27" y2="14" />
                 </svg>
                 <div class="brand-text">
-                    <span class="brand-title">GCFMM</span>
+                    <span class="brand-title">Gospel Of Christ MaticMatic Inc</span>
                     <span class="brand-subtitle">CHURCH</span>
                     <span class="brand-tagline">For People. For Jesus. For Maticmatic.</span>
                 </div>
@@ -357,7 +357,7 @@
         </nav>
 
         <div class="page-hero-content">
-            <span class="eyebrow">Gospel of Christ Fellowship Maticmatic Inc.</span>
+            <span class="eyebrow">Gospel Of Christ MaticMatic Inc</span>
             <h1>About Us &amp; Gatherings</h1>
             <p>We are a welcoming community of believers in Maticmatic, Sta. Barbara, Pangasinan, dedicated to worship, fellowship, and sharing the Gospel of Christ.</p>
         </div>
@@ -409,7 +409,7 @@
             </div>
 
             <div>
-                <p class="footer-col-title">Gospel of Christ Fellowship</p>
+                <p class="footer-col-title">Gospel Of Christ MaticMatic Inc</p>
                 <p class="footer-col-sub">Maticmatic, Sta. Barbara, Pangasinan</p>
             </div>
         </div>
@@ -546,12 +546,19 @@
 
             document.querySelectorAll("a").forEach(function (link) {
                 link.addEventListener("click", function (e) {
+                    const href = link.getAttribute("href") || "";
+
+                    if (href === "index.html" || href.startsWith("index.html#")) {
+                        try {
+                            sessionStorage.setItem("gcfmm_skip_loader", "1");
+                        } catch (err) {}
+                    }
+
                     const rect = link.getBoundingClientRect();
                     const x = e.clientX || (rect.left + rect.width / 2);
                     const y = e.clientY || (rect.top + rect.height / 2);
                     spawnPop(x, y);
 
-                    const href = link.getAttribute("href");
                     const opensNewTab = link.getAttribute("target") === "_blank";
                     const isSameTabPage = href && !href.startsWith("#") && !opensNewTab;
 
