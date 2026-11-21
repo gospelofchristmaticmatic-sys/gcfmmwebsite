@@ -61,7 +61,7 @@
             align-items: center;
             z-index: 9999;
             padding: 24px;
-            transition: opacity 0.45s ease, visibility 0.45s ease;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
         }
 
         .loader-screen.done {
@@ -139,7 +139,7 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.9);
             opacity: 0;
             transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.25s ease;
+            transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.25s ease;
         }
 
         body.loaded section {
@@ -289,43 +289,37 @@
     </div>
 
     <script>
-        // --- 1. 2.5-SECOND 0-100% LOADER ---
+        // --- 1. 2.5-SECOND 0-100% LOADER (RUNS ON EVERY LOAD/REFRESH) ---
         function startLoader() {
             const percentEl = document.getElementById("loaderPercent");
             const barFillEl = document.getElementById("loaderBarFill");
             const loaderScreen = document.getElementById("loaderScreen");
 
-            if (!loaderScreen) {
-                document.body.classList.add("loaded");
-                return;
-            }
+            if (!percentEl || !barFillEl || !loaderScreen) return;
 
-            let finished = false;
+            loaderScreen.classList.remove("done");
+            document.body.classList.remove("loaded");
+            percentEl.textContent = "0%";
+            barFillEl.style.width = "0%";
+
             const duration = 2500;
             const startTime = performance.now();
 
             function finishLoader() {
-                if (finished) return;
-                finished = true;
-
-                if (percentEl) percentEl.textContent = "100%";
-                if (barFillEl) barFillEl.style.width = "100%";
-
-                document.body.classList.add("loaded");
-                loaderScreen.classList.add("done");
-
+                percentEl.textContent = "100%";
+                barFillEl.style.width = "100%";
                 setTimeout(function () {
-                    loaderScreen.style.display = "none";
-                }, 500);
+                    loaderScreen.classList.add("done");
+                    document.body.classList.add("loaded");
+                }, 250);
             }
 
             function updateProgress(now) {
-                if (finished) return;
                 const elapsed = now - startTime;
                 const progress = Math.min(100, Math.floor((elapsed / duration) * 100));
 
-                if (percentEl) percentEl.textContent = progress + "%";
-                if (barFillEl) barFillEl.style.width = progress + "%";
+                percentEl.textContent = progress + "%";
+                barFillEl.style.width = progress + "%";
 
                 if (elapsed < duration) {
                     requestAnimationFrame(updateProgress);
@@ -335,19 +329,18 @@
             }
 
             requestAnimationFrame(updateProgress);
-            setTimeout(finishLoader, duration + 600);
+            setTimeout(finishLoader, duration + 1000);
         }
 
         // --- 2. BACKGROUND MOVING SMALL CIRCLES & RINGS ---
         function initBackgroundParticles() {
             const canvas = document.getElementById("bgParticles");
-            if (!canvas || !canvas.getContext) return;
+            if (!canvas) return;
             const ctx = canvas.getContext("2d");
-            if (!ctx) return;
 
             function resize() {
-                canvas.width = window.innerWidth || 800;
-                canvas.height = window.innerHeight || 600;
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
             }
             resize();
             window.addEventListener("resize", resize);
@@ -359,7 +352,7 @@
                 "rgba(0, 119, 182, 0.18)"
             ];
 
-            const count = Math.min(55, Math.floor((canvas.width * canvas.height) / 18000));
+            const count = Math.min(55, Math.floor((window.innerWidth * window.innerHeight) / 18000));
             const circles = Array.from({ length: Math.max(22, count) }, function (_, idx) {
                 return {
                     x: Math.random() * canvas.width,
@@ -406,6 +399,98 @@
         // --- 3. LINK CLICK POPPING CIRCLE PARTICLES ---
         function initClickParticles() {
             const canvas = document.getElementById("clickParticles");
-            if (!canvas || !canvas.getContext) return;
+            if (!canvas) return;
             const ctx = canvas.getContext("2d");
-            if (!ctx) return;
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener("resize", resize);
+
+            const burstColors = ["#034078", "#1d4ed8", "#0077b6", "#90e0ef", "#ffffff"];
+            const pops = [];
+
+            function spawnPop(x, y) {
+                const count = 18;
+                for (let i = 0; i < count; i++) {
+                    const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.25;
+                    const speed = 2.2 + Math.random() * 4.2;
+                    pops.push({
+                        x: x,
+                        y: y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        r: 3 + Math.random() * 4.5,
+                        alpha: 1,
+                        color: burstColors[Math.floor(Math.random() * burstColors.length)]
+                    });
+                }
+            }
+
+            function drawPops() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (let i = pops.length - 1; i >= 0; i--) {
+                    const p = pops[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vx *= 0.96;
+                    p.vy *= 0.96;
+                    p.r *= 0.96;
+                    p.alpha -= 0.03;
+
+                    if (p.alpha <= 0.02 || p.r < 0.5) {
+                        pops.splice(i, 1);
+                        continue;
+                    }
+
+                    ctx.save();
+                    ctx.globalAlpha = Math.max(0, p.alpha);
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                requestAnimationFrame(drawPops);
+            }
+
+            requestAnimationFrame(drawPops);
+
+            document.querySelectorAll("a").forEach(function (link) {
+                link.addEventListener("click", function (e) {
+                    const x = e.clientX || link.getBoundingClientRect().left + link.offsetWidth / 2;
+                    const y = e.clientY || link.getBoundingClientRect().top + link.offsetHeight / 2;
+                    spawnPop(x, y);
+
+                    const href = link.getAttribute("href");
+                    const opensNewTab = link.getAttribute("target") === "_blank";
+                    const isSameTabPage = href && !href.startsWith("#") && !opensNewTab;
+
+                    if (isSameTabPage) {
+                        e.preventDefault();
+                        setTimeout(function () {
+                            window.location.href = href;
+                        }, 260);
+                    }
+                });
+            });
+        }
+
+        function initAll() {
+            startLoader();
+            initBackgroundParticles();
+            initClickParticles();
+        }
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", initAll);
+        } else {
+            initAll();
+        }
+    </script>
+</body>
+</html>
