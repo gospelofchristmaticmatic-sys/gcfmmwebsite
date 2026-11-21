@@ -149,7 +149,8 @@
 
         body.loaded section:nth-child(1) { transition-delay: 0.08s; border-top-color: #034078; }
         body.loaded section:nth-child(2) { transition-delay: 0.16s; border-top-color: #0077b6; }
-        body.loaded section:nth-child(3) { transition-delay: 0.24s; border-top-color: #1d4ed8; }
+        body.loaded section:nth-child(3) { transition-delay: 0.24s; border-top-color: #0284c7; }
+        body.loaded section:nth-child(4) { transition-delay: 0.32s; border-top-color: #1d4ed8; }
 
         body.loaded section:hover {
             transform: translateY(-4px);
@@ -213,6 +214,37 @@
             box-shadow: 0 6px 20px rgba(29, 78, 216, 0.45);
         }
 
+        /* --- QR CODE BOX --- */
+        .qr-wrapper {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            background: #ffffff;
+            padding: 16px;
+            border-radius: 14px;
+            border: 2px solid rgba(3, 64, 120, 0.18);
+            box-shadow: 0 6px 16px rgba(3, 64, 120, 0.12);
+            margin-top: 8px;
+        }
+
+        #qrcode canvas,
+        #qrcode img {
+            display: block;
+            width: 176px !important;
+            height: 176px !important;
+            border-radius: 6px;
+        }
+
+        .qr-caption {
+            font-size: 0.85rem;
+            color: #034078;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 0;
+            word-break: break-all;
+            max-width: 240px;
+        }
+
         iframe {
             margin-top: 12px;
             border: 2px solid #034078;
@@ -233,6 +265,9 @@
             50% { transform: scale(1.12); }
         }
     </style>
+
+    <!-- QR Code Generator Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
     <!-- Background Moving Circles -->
@@ -273,6 +308,15 @@
                     </a>
                 </li>
             </ul>
+        </section>
+
+        <section>
+            <h2>Share via QR Code</h2>
+            <p>Scan to open GCFMM on your phone</p>
+            <div class="qr-wrapper">
+                <div id="qrcode"></div>
+                <p class="qr-caption" id="qrLabel"></p>
+            </div>
         </section>
 
         <section>
@@ -480,10 +524,36 @@
             });
         }
 
+        // --- 4. QR CODE GENERATOR ---
+        function initQrCode() {
+            const qrContainer = document.getElementById("qrcode");
+            const qrLabel = document.getElementById("qrLabel");
+            if (!qrContainer || typeof QRCode === "undefined") return;
+
+            const qrTargetUrl = window.location.href.startsWith("http")
+                ? window.location.href
+                : "https://www.facebook.com/gcfmm2023";
+
+            qrContainer.innerHTML = "";
+            new QRCode(qrContainer, {
+                text: qrTargetUrl,
+                width: 176,
+                height: 176,
+                colorDark: "#034078",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            if (qrLabel) {
+                qrLabel.textContent = qrTargetUrl;
+            }
+        }
+
         function initAll() {
             startLoader();
             initBackgroundParticles();
             initClickParticles();
+            initQrCode();
         }
 
         if (document.readyState === "loading") {
