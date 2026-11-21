@@ -25,9 +25,31 @@
             margin: 0;
             padding: 36px 16px;
             line-height: 1.65;
+            overflow-x: hidden;
+        }
+
+        /* --- BACKGROUND & CLICK PARTICLE CANVASES --- */
+        #bgParticles {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        #clickParticles {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9998;
+            pointer-events: none;
         }
 
         .container {
+            position: relative;
+            z-index: 1;
             max-width: 720px;
             margin: 0 auto;
         }
@@ -131,6 +153,12 @@
     </style>
 </head>
 <body>
+    <!-- Background Moving Circles -->
+    <canvas id="bgParticles"></canvas>
+
+    <!-- Link Click Popping Circles -->
+    <canvas id="clickParticles"></canvas>
+
     <div class="container">
         <section>
             <h1>About Us</h1>
@@ -143,18 +171,17 @@
             <ul>
                 <li>
                     <strong>Sunday Worship Service</strong><br />
-                    Every Sunday • 8:30 AM 
+                    Every Sunday • 8:30 AM
                 </li>
                 <li>
                     <strong>Prayer Meeting</strong><br />
                     Tuesday • 7:00 PM
                 </li>
                 <li>
-                    <strong>Midwwek Gathering</strong><br />
-                    Midweek Gathering • Thursday &amp; 7:00 PM
+                    <strong>Midweek Gathering</strong><br />
+                    Thursday • 7:00 PM
                 </li>
             </ul>
-            
         </section>
 
         <section>
@@ -163,9 +190,169 @@
     </div>
 
     <script>
-        document.getElementById("backHomeBtn").addEventListener("click", function () {
-            sessionStorage.setItem("gcfmm_skip_loader", "1");
-        });
+        function initBackgroundParticles() {
+            const canvas = document.getElementById("bgParticles");
+            if (!canvas || !canvas.getContext) return;
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return;
+
+            function resize() {
+                canvas.width = window.innerWidth || 800;
+                canvas.height = window.innerHeight || 600;
+            }
+            resize();
+            window.addEventListener("resize", resize);
+
+            const colors = [
+                "rgba(3, 64, 120, 0.18)",
+                "rgba(29, 78, 216, 0.16)",
+                "rgba(255, 255, 255, 0.55)",
+                "rgba(0, 119, 182, 0.18)"
+            ];
+
+            const count = Math.min(55, Math.floor((canvas.width * canvas.height) / 18000));
+            const circles = Array.from({ length: Math.max(22, count) }, function (_, idx) {
+                return {
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    r: 3 + Math.random() * 6.5,
+                    vx: (Math.random() - 0.5) * 0.75,
+                    vy: (Math.random() - 0.5) * 0.75,
+                    ring: idx % 4 === 0,
+                    color: colors[Math.floor(Math.random() * colors.length)]
+                };
+            });
+
+            function drawBg() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (let i = 0; i < circles.length; i++) {
+                    const c = circles[i];
+                    c.x += c.vx;
+                    c.y += c.vy;
+
+                    if (c.x < -c.r * 2) c.x = canvas.width + c.r * 2;
+                    if (c.x > canvas.width + c.r * 2) c.x = -c.r * 2;
+                    if (c.y < -c.r * 2) c.y = canvas.height + c.r * 2;
+                    if (c.y > canvas.height + c.r * 2) c.y = -c.r * 2;
+
+                    ctx.beginPath();
+                    ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+                    if (c.ring) {
+                        ctx.strokeStyle = c.color;
+                        ctx.lineWidth = 1.6;
+                        ctx.stroke();
+                    } else {
+                        ctx.fillStyle = c.color;
+                        ctx.fill();
+                    }
+                }
+
+                requestAnimationFrame(drawBg);
+            }
+
+            requestAnimationFrame(drawBg);
+        }
+
+        function initClickParticles() {
+            const canvas = document.getElementById("clickParticles");
+            if (!canvas || !canvas.getContext) return;
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return;
+
+            function resize() {
+                canvas.width = window.innerWidth || 800;
+                canvas.height = window.innerHeight || 600;
+            }
+            resize();
+            window.addEventListener("resize", resize);
+
+            const burstColors = ["#034078", "#1d4ed8", "#0077b6", "#90e0ef", "#ffffff"];
+            const pops = [];
+
+            function spawnPop(x, y) {
+                const count = 18;
+                for (let i = 0; i < count; i++) {
+                    const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.25;
+                    const speed = 2.2 + Math.random() * 4.2;
+                    pops.push({
+                        x: x,
+                        y: y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        r: 3 + Math.random() * 4.5,
+                        alpha: 1,
+                        color: burstColors[Math.floor(Math.random() * burstColors.length)]
+                    });
+                }
+            }
+
+            function drawPops() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (let i = pops.length - 1; i >= 0; i--) {
+                    const p = pops[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vx *= 0.96;
+                    p.vy *= 0.96;
+                    p.r *= 0.96;
+                    p.alpha -= 0.03;
+
+                    if (p.alpha <= 0.02 || p.r < 0.5) {
+                        pops.splice(i, 1);
+                        continue;
+                    }
+
+                    ctx.save();
+                    ctx.globalAlpha = Math.max(0, p.alpha);
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                requestAnimationFrame(drawPops);
+            }
+
+            requestAnimationFrame(drawPops);
+
+            document.querySelectorAll("a").forEach(function (link) {
+                link.addEventListener("click", function (e) {
+                    if (link.id === "backHomeBtn") {
+                        sessionStorage.setItem("gcfmm_skip_loader", "1");
+                    }
+
+                    const rect = link.getBoundingClientRect();
+                    const x = e.clientX || (rect.left + rect.width / 2);
+                    const y = e.clientY || (rect.top + rect.height / 2);
+                    spawnPop(x, y);
+
+                    const href = link.getAttribute("href");
+                    const opensNewTab = link.getAttribute("target") === "_blank";
+                    const isSameTabPage = href && !href.startsWith("#") && !opensNewTab;
+
+                    if (isSameTabPage) {
+                        e.preventDefault();
+                        setTimeout(function () {
+                            window.location.href = href;
+                        }, 260);
+                    }
+                });
+            });
+        }
+
+        function initAll() {
+            try { initBackgroundParticles(); } catch (e) { console.error(e); }
+            try { initClickParticles(); } catch (e) { console.error(e); }
+        }
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", initAll);
+        } else {
+            initAll();
+        }
     </script>
 </body>
 </html>
