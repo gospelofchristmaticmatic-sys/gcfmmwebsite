@@ -69,6 +69,10 @@
             pointer-events: none;
         }
 
+        body.skip-loader .loader-screen {
+            display: none !important;
+        }
+
         .loader-cross {
             font-size: 2.8rem;
             font-weight: 300;
@@ -503,6 +507,18 @@
     </style>
 </head>
 <body>
+    <!-- Immediately skip loader if returning from about.html -->
+    <script>
+        (function () {
+            try {
+                if (sessionStorage.getItem("gcfmm_skip_loader") === "1") {
+                    sessionStorage.removeItem("gcfmm_skip_loader");
+                    document.body.classList.add("skip-loader");
+                }
+            } catch (e) {}
+        })();
+    </script>
+
     <!-- Background Moving Circles & Click Popping Particles -->
     <canvas id="bgParticles"></canvas>
     <canvas id="clickParticles"></canvas>
@@ -643,13 +659,18 @@
     </footer>
 
     <script>
-        // --- 1. 2.5-SECOND 0-100% LOADER ---
+        // --- 1. 2.5-SECOND 0-100% LOADER (SKIPS ONLY WHEN RETURNING FROM ABOUT.HTML) ---
         function startLoader() {
             const percentEl = document.getElementById("loaderPercent");
             const barFillEl = document.getElementById("loaderBarFill");
             const loaderScreen = document.getElementById("loaderScreen");
 
             if (!loaderScreen) return;
+
+            if (document.body.classList.contains("skip-loader")) {
+                loaderScreen.style.display = "none";
+                return;
+            }
 
             let finished = false;
             const duration = 2500;
