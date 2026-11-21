@@ -61,7 +61,7 @@
             align-items: center;
             z-index: 9999;
             padding: 24px;
-            transition: opacity 0.6s ease, visibility 0.6s ease;
+            transition: opacity 0.45s ease, visibility 0.45s ease;
         }
 
         .loader-screen.done {
@@ -139,7 +139,7 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.9);
             opacity: 0;
             transform: translateY(20px);
-            transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.25s ease;
+            transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.25s ease;
         }
 
         body.loaded section {
@@ -248,4 +248,164 @@
         <p class="loader-sub">Maticmatic, Sta. Barbara, Pangasinan</p>
         <div class="loader-percent" id="loaderPercent">0%</div>
         <div class="loader-bar-track">
-            <div class="loader-
+            <div class="loader-bar-fill" id="loaderBarFill"></div>
+        </div>
+    </div>
+
+    <!-- Main Website Content -->
+    <div class="container">
+        <section>
+            <h1>Welcome to GCFMM WEBSITE</h1>
+            <p>You are all welcome to our church</p>
+        </section>
+
+        <section>
+            <h2>Links &amp; Info</h2>
+            <ul>
+                <li>
+                    <a class="btn-link" href="about.html">
+                        About Us &amp; Sunday Services
+                    </a>
+                </li>
+                <li>
+                    <a class="btn-link" href="https://www.facebook.com/gcfmm2023" target="_blank" rel="noopener noreferrer">
+                        Visit Our Facebook Page
+                    </a>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Location</h2>
+            <p>We are located in Maticmatic, Sta. Barbara, Pangasinan</p>
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d122777.35520395542!2d120.36112730116957!3d15.919945908670009!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x339141f596049c1b%3A0xca8bba65d439f027!2sGospel%20of%20Christ%20Fellowship%20Maticmatic!5e0!3m2!1sen!2sph!4v1795173584442!5m2!1sen!2sph"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Gospel of Christ Fellowship Maticmatic Location"
+            ></iframe>
+        </section>
+    </div>
+
+    <script>
+        // --- 1. 2.5-SECOND 0-100% LOADER ---
+        function startLoader() {
+            const percentEl = document.getElementById("loaderPercent");
+            const barFillEl = document.getElementById("loaderBarFill");
+            const loaderScreen = document.getElementById("loaderScreen");
+
+            if (!loaderScreen) {
+                document.body.classList.add("loaded");
+                return;
+            }
+
+            let finished = false;
+            const duration = 2500;
+            const startTime = performance.now();
+
+            function finishLoader() {
+                if (finished) return;
+                finished = true;
+
+                if (percentEl) percentEl.textContent = "100%";
+                if (barFillEl) barFillEl.style.width = "100%";
+
+                document.body.classList.add("loaded");
+                loaderScreen.classList.add("done");
+
+                setTimeout(function () {
+                    loaderScreen.style.display = "none";
+                }, 500);
+            }
+
+            function updateProgress(now) {
+                if (finished) return;
+                const elapsed = now - startTime;
+                const progress = Math.min(100, Math.floor((elapsed / duration) * 100));
+
+                if (percentEl) percentEl.textContent = progress + "%";
+                if (barFillEl) barFillEl.style.width = progress + "%";
+
+                if (elapsed < duration) {
+                    requestAnimationFrame(updateProgress);
+                } else {
+                    finishLoader();
+                }
+            }
+
+            requestAnimationFrame(updateProgress);
+            setTimeout(finishLoader, duration + 600);
+        }
+
+        // --- 2. BACKGROUND MOVING SMALL CIRCLES & RINGS ---
+        function initBackgroundParticles() {
+            const canvas = document.getElementById("bgParticles");
+            if (!canvas || !canvas.getContext) return;
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return;
+
+            function resize() {
+                canvas.width = window.innerWidth || 800;
+                canvas.height = window.innerHeight || 600;
+            }
+            resize();
+            window.addEventListener("resize", resize);
+
+            const colors = [
+                "rgba(3, 64, 120, 0.18)",
+                "rgba(29, 78, 216, 0.16)",
+                "rgba(255, 255, 255, 0.55)",
+                "rgba(0, 119, 182, 0.18)"
+            ];
+
+            const count = Math.min(55, Math.floor((canvas.width * canvas.height) / 18000));
+            const circles = Array.from({ length: Math.max(22, count) }, function (_, idx) {
+                return {
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    r: 3 + Math.random() * 6.5,
+                    vx: (Math.random() - 0.5) * 0.75,
+                    vy: (Math.random() - 0.5) * 0.75,
+                    ring: idx % 4 === 0,
+                    color: colors[Math.floor(Math.random() * colors.length)]
+                };
+            });
+
+            function drawBg() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (let i = 0; i < circles.length; i++) {
+                    const c = circles[i];
+                    c.x += c.vx;
+                    c.y += c.vy;
+
+                    if (c.x < -c.r * 2) c.x = canvas.width + c.r * 2;
+                    if (c.x > canvas.width + c.r * 2) c.x = -c.r * 2;
+                    if (c.y < -c.r * 2) c.y = canvas.height + c.r * 2;
+                    if (c.y > canvas.height + c.r * 2) c.y = -c.r * 2;
+
+                    ctx.beginPath();
+                    ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+                    if (c.ring) {
+                        ctx.strokeStyle = c.color;
+                        ctx.lineWidth = 1.6;
+                        ctx.stroke();
+                    } else {
+                        ctx.fillStyle = c.color;
+                        ctx.fill();
+                    }
+                }
+
+                requestAnimationFrame(drawBg);
+            }
+
+            requestAnimationFrame(drawBg);
+        }
+
+        // --- 3. LINK CLICK POPPING CIRCLE PARTICLES ---
+        function initClickParticles() {
+            const canvas = document.getElementById("clickParticles");
+            if (!canvas || !canvas.getContext) return;
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return;
